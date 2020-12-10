@@ -1,0 +1,10 @@
+{
+	"title": "Streaming Camera for VRMod [Twitch / OBS / Desktop]",
+	"type": "ServerContent",
+	"tags": [ ],
+	"ignore": [
+		"preview.png",
+		".git/*",
+		"icon.jpg"
+	]
+}
