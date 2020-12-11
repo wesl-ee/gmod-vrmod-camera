@@ -16,7 +16,6 @@ function ENT:Initialize()
 	self:SetSolid(SOLID_NONE)
 	self:DrawShadow(false)
 
-
 	local phys = self:GetPhysicsObject()
 
 	if (IsValid(phys)) then
@@ -42,14 +41,17 @@ function ENT:Think()
 	local p = self:GetPlayer()
 
 	if not self.ConfirmedToClient then
-		net.Start("vrmod_camera_created")
-		net.WriteEntity(self)
-		net.WriteInt(self.mode, 8)
-		net.Send(p)
+		-- BUG - Message not sent sometimes when starting with VRMod :(
+		timer.Simple(1, function()
+			net.Start("vrmod_camera_created")
+			net.WriteEntity(self)
+			net.WriteInt(self.mode, 8)
+			net.Send(p)
+		end )
 
 		-- Is this expected functionality?
 		if vrmod.IsPlayerInVR(p) then
-			self:CameraOn()
+			-- self:CameraOn()
 		end
 
 		self.ConfirmedToClient = true
@@ -179,43 +181,6 @@ function ENT:OnRemove()
 	end
 
 	self:GetPlayer().VRModCamera = nil
-end
-
-function ENT:CameraOn()
-	local pl = self:GetPlayer()
-
-	if not IsValid(pl) then return end
-
-	-- pl:SetViewEntity(self)
-	pl.UsingCamera = self
-	self.UsingPlayer = pl
-
-	-- First-person smoothed perspective
-	if self.mode == 3 then
-		self:SetPos(pl:GetPos())
-		self:SetAngles(pl:GetAngles())
-	end
-
-	hook.Add("VRMod_Exit", "stop_vr_camera", function(p)
-		if p ~= self:GetPlayer() then return end
-		self:CameraOff()
-	end )
-
-	self.notifiedPlayer = true
-end
-
-function ENT:CameraOff(pl)
-	local pl = self:GetPlayer()
-
-	net.Start("vrmod_camera_stop")
-	net.WriteEntity(self)
-	net.Send(pl)
-
-	if ( pl.UsingCamera && pl.UsingCamera == ent ) then
-		-- pl:SetViewEntity( pl )
-		pl.UsingCamera = nil
-		ent.UsingPlayer = nil
-	end
 end
 
 function MakeCamera( ply, camData, Data )
