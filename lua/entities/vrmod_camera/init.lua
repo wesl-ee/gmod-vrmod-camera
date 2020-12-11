@@ -99,6 +99,9 @@ function ENT:Think()
 		-- EyeAngles() because otherwise we rotate about an over-the-shoulder axis
 		-- which will vary the height depending on your HMD roll and it looks weird
 		destPos = destPos + p:EyeAngles():Right() * self.shoulderOffset
+		destPos = destPos + p:EyeAngles():Up() * self.shoulderHeight
+		destAng.yaw = destAng.yaw + self.shoulderYaw
+		destAng.pitch = destAng.pitch + self.shoulderPitchDown
 
 		local trace = {}
 		local endpos = destPos
@@ -202,10 +205,11 @@ function MakeCamera( ply, camData, Data )
 	ent:SetMode(camData["mode"])
 	ent:SetSmoothing(camData["smoothing"])
 	ent:SetStabilize(camData["stabilize"])
-	ent:SetFlyDist(camData["flydist"])
 	ent:SetTracking(NULL, Vector(0))
 	ent:SetLocked(camData["locked"])
 	ent:SetDraw(camData["draw"])
+	ent:SetLefty(camData["lefty"])
+	ent:SetFlyDist(camData["flydist"])
 
 	ent:Spawn()
 
@@ -222,6 +226,7 @@ net.Receive("vrmod_camera_create", function(n, p)
 	camData["stabilize"] = net.ReadBool()
 	camData["flydist"] = net.ReadInt(8)
 	camData["draw"] = net.ReadBool()
+	camData["lefty"] = net.ReadBool()
 
 	local ent
 

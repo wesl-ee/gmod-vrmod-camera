@@ -38,14 +38,28 @@ end
 
 function ENT:SetFlyDist(val)
 	if val == 1 then
+		self.flydist = 50
+		self.shoulderOffset = 25
+		self.shoulderHeight = 10
+		self.shoulderYaw = 5
+		self.shoulderPitchDown = 13
+	elseif val == 2 then
 		self.flydist = 75
 		self.shoulderOffset = 35
-	elseif val == 2 then
-		self.flydist = 100
-		self.shoulderOffset = 35
+		self.shoulderHeight = 10
+		self.shoulderYaw = 5
+		self.shoulderPitchDown = 15
 	else
-		self.flydist = 150
+		self.flydist = 100
 		self.shoulderOffset = 45
+		self.shoulderHeight = 20
+		self.shoulderYaw = 10
+		self.shoulderPitchDown = 20
+	end
+
+	if self.lefty then
+		self.shoulderOffset = -self.shoulderOffset
+		self.shoulderYaw = -self.shoulderYaw
 	end
 end
 

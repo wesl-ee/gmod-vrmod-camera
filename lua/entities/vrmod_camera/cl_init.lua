@@ -12,6 +12,7 @@ CreateConVar( "vrmod_camera_stabilize", "1", FCVAR_ARCHIVE, "Limit roll on VRMod
 CreateConVar( "vrmod_camera_flydist", "1", FCVAR_ARCHIVE, "Distance to fly from player" )
 CreateConVar( "vrmod_camera_autospawn", "0", FCVAR_ARCHIVE, "Create the camera automatically" )
 CreateConVar( "vrmod_camera_draw", "1", FCVAR_ARCHIVE, "Draw VRMod cameras" )
+CreateConVar( "vrmod_camera_lefty", "0", FCVAR_ARCHIVE, "Fly behind the left shoulder" )
 
 function ENT:Draw( flags )
 	if ( GetConVarNumber( "cl_drawcameras" ) == 0 ) then return end
@@ -37,6 +38,7 @@ local function CamData()
 		stabilize = GetConVar("vrmod_camera_stabilize"):GetBool();
 		flydist = GetConVar("vrmod_camera_flydist"):GetInt();
 		draw = GetConVar("vrmod_camera_draw"):GetBool();
+		lefty = GetConVar("vrmod_camera_lefty"):GetBool();
 	}
 end
 
@@ -48,6 +50,7 @@ local function CreateWithSettings(d)
 	net.WriteBool(d["stabilize"])
 	net.WriteInt(d["flydist"], 8)
 	net.WriteBool(d["draw"])
+	net.WriteBool(d["lefty"])
 	net.SendToServer()
 end
 
@@ -158,7 +161,6 @@ local function StartCamera()
 end
 
 net.Receive("vrmod_camera_created", function()
-
 	local camera = net.ReadEntity()
 
 	if not LocalPlayer().VRModCameras then
@@ -268,6 +270,18 @@ local function CreateMenu()
 	stabilizeCheckbox:SetChecked(GetConVar("vrmod_camera_stabilize"):GetBool())
 	stabilizeCheckbox.OnChange = function(_, check)
 		GetConVar("vrmod_camera_stabilize"):SetBool(check)
+	end
+
+	local leftyLabel = vgui.Create("DLabel", frame)
+	leftyLabel:SetPos(385, 70)
+	leftyLabel:SetSize(100, 20)
+	leftyLabel:SetText("Lefty")
+
+	local leftyCheckbox = vgui.Create("DCheckBox", frame)
+	leftyCheckbox:SetPos(360, 73)
+	leftyCheckbox:SetChecked(GetConVar("vrmod_camera_lefty"):GetBool())
+	leftyCheckbox.OnChange = function(_, check)
+		GetConVar("vrmod_camera_lefty"):SetBool(check)
 	end
 
 	local camerasList = vgui.Create("DListView", frame)
