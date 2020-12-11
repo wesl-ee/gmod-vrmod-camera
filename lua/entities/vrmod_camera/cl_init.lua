@@ -115,6 +115,7 @@ local function StartCamera()
 		VRCamHideWModels(wmOn)
 	end )
 
+	-- BUG - Cannot restore hook once removed!
 	hook.Remove("ShouldDrawLocalPlayer", "vrutil_hook_shoulddrawlocalplayer")
 	hook.Add("ShouldDrawLocalPlayer","vrcamera_shoulddrawlocalplayer", function() return true end)
 	hook.Add("VRUtilEventPostRender", "vrcamera_vrpostrender", function() VRCamHideWModels(false) end)
@@ -414,6 +415,7 @@ end )
 hook.Add("VRMod_Exit", "vrmod_camera_stopwhenvrmod", function()
 	if IsCameraSpawned() then
 		StopCamera()
+		hook.Remove("ShouldDrawLocalPlayer","vrcamera_shoulddrawlocalplayer")
 	end
 end )
 

@@ -177,12 +177,6 @@ end
 
 
 function ENT:OnRemove()
-	hook.Remove("VRMod_Start", "start_vr_camera")
-	hook.Remove("VRMod_Exit", "stop_vr_camera")
-	if IsValid(self.UsingPlayer) then
-		self:CameraOff()
-	end
-
 	self:GetPlayer().VRModCamera = nil
 end
 

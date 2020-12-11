@@ -82,6 +82,10 @@ function ENT:SetDraw(val)
 	end
 end
 
+function ENT:SetLefty(val)
+	self.lefty = val
+end
+
 function ENT:SetTracking( Ent, LPos )
 
 	if ( IsValid( Ent ) ) then
